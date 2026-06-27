@@ -11,12 +11,12 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "zod": "^3.22.0"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@transora/typescript-config": "workspace:*",
     "@transora/eslint-config": "workspace:*",
-    "vitest": "^1.6.0",
-    "typescript": "^5.4.0"
+    "vitest": "^4.1.9",
+    "typescript": "^6.0.3"
   }
 }
