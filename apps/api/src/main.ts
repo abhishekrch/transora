@@ -1,12 +1,17 @@
 import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
+import { Logger } from "nestjs-pino";
 import { AppModule } from "./app.module";
 import { AppConfig } from "./config/app.config";
 import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
-import { LoggingInterceptor } from "./common/interceptors/logging.interceptor";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
+
+  app.useLogger(app.get(Logger));
+
   const config = app.get(AppConfig);
 
   app.enableCors({
@@ -24,14 +29,11 @@ async function bootstrap() {
 
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  app.useGlobalInterceptors(new LoggingInterceptor());
-
   app.getHttpAdapter().get("/health", (req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
   });
 
   await app.listen(config.port);
-  console.log(`Transora API running on port ${config.port}`);
 }
 
 bootstrap();
