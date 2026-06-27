@@ -1,10 +1,11 @@
 import { Injectable, ConflictException, UnauthorizedException, Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "@/prisma/prisma.service";
-import { AppConfig } from "@/config/app.config";
 import { PasswordService } from "@/common/services/password.service";
-import { ApiResponse, JWT_ACCESS_TTL, JWT_REFRESH_TTL } from "@transora/shared";
+import { JWT_ACCESS_TTL, JWT_REFRESH_TTL } from "@transora/shared";
 import type { RegisterInput, LoginInput } from "@transora/shared";
+import type { EnvConfig } from "@/config/env.validation";
 import { Prisma } from "@prisma/client";
 
 @Injectable()
@@ -14,7 +15,7 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-    private readonly config: AppConfig,
+    private readonly config: ConfigService<EnvConfig, true>,
     private readonly passwordService: PasswordService
   ) {}
 
@@ -30,9 +31,8 @@ export class AuthService {
       this.logger.log(`User registered: ${input.email}`);
 
       const tokens = this.generateTokens(user.id, user.email);
-      const data = { user, ...tokens };
 
-      return new ApiResponse(data, "Registration successful");
+      return { user, ...tokens };
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
         throw new ConflictException("Email already registered");
@@ -58,42 +58,43 @@ export class AuthService {
 
     const { passwordHash, ...userWithoutPassword } = user;
     const tokens = this.generateTokens(user.id, user.email);
-    const data = { user: userWithoutPassword, ...tokens };
 
-    return new ApiResponse(data, "Login successful");
+    return { user: userWithoutPassword, ...tokens };
   }
 
   async refresh(refreshToken: string) {
     try {
       const payload = this.jwtService.verify(refreshToken, {
-        secret: this.config.jwtRefreshSecret,
+        secret: this.config.get("JWT_REFRESH_SECRET", { infer: true }),
       });
 
       this.logger.log(`Tokens refreshed for user: ${payload.email}`);
 
-      const tokens = this.generateTokens(payload.sub, payload.email);
-
-      return new ApiResponse(tokens, "Tokens refreshed");
+      return this.generateTokens(payload.sub, payload.email);
     } catch {
       throw new UnauthorizedException("Invalid refresh token");
     }
   }
 
   async getProfile(userId: string) {
-    const user = await this.prisma.user.findUnique({
+    return this.prisma.user.findUnique({
       where: { id: userId },
       select: { id: true, email: true, companyName: true, emailVerified: true, createdAt: true },
     });
-
-    return new ApiResponse(user);
   }
 
   private generateTokens(userId: string, email: string) {
     const payload = { sub: userId, email };
 
     return {
-      accessToken: this.jwtService.sign(payload, { secret: this.config.jwtSecret, expiresIn: JWT_ACCESS_TTL }),
-      refreshToken: this.jwtService.sign(payload, { secret: this.config.jwtRefreshSecret, expiresIn: JWT_REFRESH_TTL }),
+      accessToken: this.jwtService.sign(payload, {
+        secret: this.config.get("JWT_SECRET", { infer: true }),
+        expiresIn: JWT_ACCESS_TTL,
+      }),
+      refreshToken: this.jwtService.sign(payload, {
+        secret: this.config.get("JWT_REFRESH_SECRET", { infer: true }),
+        expiresIn: JWT_REFRESH_TTL,
+      }),
     };
   }
 }

@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException, Logger } from "@nestjs/common";
 import { PrismaService } from "@/prisma/prisma.service";
-import { generateApiKey } from "@/common/utils/api-key.util";
-import { ApiResponse } from "@transora/shared";
+import { generateApiKey } from "@/modules/website/utils/api-key";
 import type { CreateWebsiteInput, UpdateWebsiteInput } from "@transora/shared";
 
 @Injectable()
@@ -11,12 +10,10 @@ export class WebsiteService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(userId: string) {
-    const websites = await this.prisma.website.findMany({
+    return this.prisma.website.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },
     });
-
-    return new ApiResponse(websites);
   }
 
   async findOne(id: string, userId: string) {
@@ -28,7 +25,7 @@ export class WebsiteService {
       throw new NotFoundException("Website not found");
     }
 
-    return new ApiResponse(website);
+    return website;
   }
 
   async create(userId: string, input: CreateWebsiteInput) {
@@ -46,7 +43,7 @@ export class WebsiteService {
 
     this.logger.log(`Website created: ${website.domain} for user ${userId}`);
 
-    return new ApiResponse(website, "Website created successfully");
+    return website;
   }
 
   async update(id: string, userId: string, input: UpdateWebsiteInput) {
@@ -57,7 +54,7 @@ export class WebsiteService {
 
     this.logger.log(`Website updated: ${website.domain}`);
 
-    return new ApiResponse(website, "Website updated successfully");
+    return website;
   }
 
   async remove(id: string, userId: string) {
@@ -67,7 +64,7 @@ export class WebsiteService {
 
     this.logger.log(`Website deleted: ${id}`);
 
-    return new ApiResponse(null, "Website deleted successfully");
+    return null;
   }
 
   async regenerateApiKey(id: string, userId: string) {
@@ -80,6 +77,6 @@ export class WebsiteService {
 
     this.logger.log(`API key regenerated for website: ${updated.domain}`);
 
-    return new ApiResponse({ apiKey: updated.apiKey }, "API key regenerated successfully");
+    return { apiKey: updated.apiKey };
   }
 }

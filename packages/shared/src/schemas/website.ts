@@ -3,48 +3,35 @@ import { SUPPORTED_LANGUAGES } from "../constants/languages";
 
 const supportedLanguageCodes: string[] = SUPPORTED_LANGUAGES.map((l) => l.code);
 
+const domainField = z
+  .string()
+  .min(1, "Domain is required")
+  .max(255)
+  .regex(
+    /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
+    "Invalid domain format"
+  )
+  .transform((val) => val.replace(/^https?:\/\//, ""));
+
+const languageArrayField = z
+  .array(z.string().min(2).max(10))
+  .min(1, "At least one language required")
+  .max(50)
+  .refine(
+    (langs) => langs.every((l) => supportedLanguageCodes.includes(l)),
+    "One or more unsupported language codes"
+  );
+
 export const CreateWebsiteSchema = z.object({
-  domain: z
-    .string()
-    .min(1, "Domain is required")
-    .max(255)
-    .regex(
-      /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
-      "Invalid domain format"
-    )
-    .transform((val) => val.replace(/^https?:\/\//, "")),
+  domain: domainField,
   defaultLanguage: z.string().min(2).max(10).default("en"),
-  allowedLanguages: z
-    .array(z.string().min(2).max(10))
-    .min(1, "At least one language required")
-    .max(50)
-    .refine(
-      (langs) => langs.every((l) => supportedLanguageCodes.includes(l)),
-      "One or more unsupported language codes"
-    ),
+  allowedLanguages: languageArrayField,
 });
 
 export const UpdateWebsiteSchema = z.object({
-  domain: z
-    .string()
-    .min(1)
-    .max(255)
-    .regex(
-      /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
-      "Invalid domain format"
-    )
-    .transform((val) => val.replace(/^https?:\/\//, ""))
-    .optional(),
+  domain: domainField.optional(),
   defaultLanguage: z.string().min(2).max(10).optional(),
-  allowedLanguages: z
-    .array(z.string().min(2).max(10))
-    .min(1)
-    .max(50)
-    .refine(
-      (langs) => langs.every((l) => supportedLanguageCodes.includes(l)),
-      "One or more unsupported language codes"
-    )
-    .optional(),
+  allowedLanguages: languageArrayField.optional(),
   switcherPosition: z
     .enum(["top-left", "top-right", "bottom-left", "bottom-right"])
     .optional(),

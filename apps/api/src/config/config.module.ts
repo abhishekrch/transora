@@ -1,7 +1,6 @@
 import { Global, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { validate } from "./env.validation";
-import { AppConfig } from "./app.config";
 
 @Global()
 @Module({
@@ -11,7 +10,5 @@ import { AppConfig } from "./app.config";
       isGlobal: true,
     }),
   ],
-  providers: [AppConfig],
-  exports: [AppConfig],
 })
 export class AppConfigModule {}
