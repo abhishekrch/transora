@@ -1,0 +1,22 @@
+{
+  "name": "@transora/shared",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src/",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@transora/typescript-config": "workspace:*",
+    "@transora/eslint-config": "workspace:*",
+    "vitest": "^1.6.0",
+    "typescript": "^5.4.0"
+  }
+}
