@@ -1,0 +1,49 @@
+import { z } from "zod";
+
+export const TranslateBatchSchema = z.object({
+  texts: z
+    .array(z.string().min(1).max(5000))
+    .min(1, "At least one text required")
+    .max(100, "Max 100 texts per batch"),
+  targetLang: z.string().min(2).max(10),
+  sourceLang: z.string().min(2).max(10).optional(),
+  domain: z.string().min(1),
+  containsPersonalData: z.boolean().optional(),
+  ttlDays: z.number().min(1).max(365).optional(),
+});
+
+export const TranslationSchema = z.object({
+  id: z.string().uuid(),
+  sourceHash: z.string(),
+  sourceText: z.string(),
+  sourceLang: z.string(),
+  targetLang: z.string(),
+  translatedText: z.string(),
+  context: z.string().nullable(),
+  charCount: z.number(),
+  isPersonal: z.boolean(),
+  expiresAt: z.date().nullable(),
+  hitCount: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const GlossarySchema = z.object({
+  id: z.string().uuid(),
+  websiteId: z.string().uuid(),
+  sourceText: z.string(),
+  targetLang: z.string(),
+  translatedText: z.string(),
+  createdAt: z.date(),
+});
+
+export const CreateGlossarySchema = z.object({
+  sourceText: z.string().min(1).max(5000),
+  targetLang: z.string().min(2).max(10),
+  translatedText: z.string().min(1).max(5000),
+});
+
+export type TranslateBatchInput = z.infer<typeof TranslateBatchSchema>;
+export type Translation = z.infer<typeof TranslationSchema>;
+export type Glossary = z.infer<typeof GlossarySchema>;
+export type CreateGlossaryInput = z.infer<typeof CreateGlossarySchema>;
