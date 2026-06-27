@@ -13,13 +13,13 @@ export const TranslateBatchSchema = z.object({
 });
 
 export const TranslationSchema = z.object({
-  id: z.string().uuid(),
+  id: z.uuid(),
+  websiteId: z.uuid(),
   sourceHash: z.string(),
   sourceText: z.string(),
   sourceLang: z.string(),
   targetLang: z.string(),
   translatedText: z.string(),
-  context: z.string().nullable(),
   charCount: z.number(),
   isPersonal: z.boolean(),
   expiresAt: z.date().nullable(),
@@ -29,8 +29,8 @@ export const TranslationSchema = z.object({
 });
 
 export const GlossarySchema = z.object({
-  id: z.string().uuid(),
-  websiteId: z.string().uuid(),
+  id: z.uuid(),
+  websiteId: z.uuid(),
   sourceText: z.string(),
   targetLang: z.string(),
   translatedText: z.string(),

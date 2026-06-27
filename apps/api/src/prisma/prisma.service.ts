@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from "@nestjs/common";
 import { PrismaClient } from "./generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { AppConfig } from "../config/app.config";
+import { AppConfig } from "@/config/app.config";
 
 @Injectable()
 export class PrismaService implements OnModuleInit, OnModuleDestroy {
@@ -45,5 +45,17 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
 
   get dailyStats() {
     return this.prisma.dailyStats;
+  }
+
+  get $transaction() {
+    return this.prisma.$transaction.bind(this.prisma);
+  }
+
+  get $queryRaw() {
+    return this.prisma.$queryRaw.bind(this.prisma);
+  }
+
+  get $executeRaw() {
+    return this.prisma.$executeRaw.bind(this.prisma);
   }
 }

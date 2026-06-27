@@ -3,8 +3,9 @@ import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "@/prisma/prisma.service";
 import { AppConfig } from "@/config/app.config";
 import { PasswordService } from "@/common/services/password.service";
-import { ApiResponse } from "@transora/shared";
+import { ApiResponse, JWT_ACCESS_TTL, JWT_REFRESH_TTL } from "@transora/shared";
 import type { RegisterInput, LoginInput } from "@transora/shared";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
@@ -18,25 +19,26 @@ export class AuthService {
   ) {}
 
   async register(input: RegisterInput) {
-    const existing = await this.prisma.user.findUnique({ where: { email: input.email } });
-
-    if (existing) {
-      throw new ConflictException("Email already registered");
-    }
-
     const passwordHash = await this.passwordService.hash(input.password);
 
-    const user = await this.prisma.user.create({
-      data: { email: input.email, passwordHash, companyName: input.companyName },
-      select: { id: true, email: true, companyName: true, emailVerified: true, createdAt: true },
-    });
+    try {
+      const user = await this.prisma.user.create({
+        data: { email: input.email, passwordHash, companyName: input.companyName },
+        select: { id: true, email: true, companyName: true, emailVerified: true, createdAt: true },
+      });
 
-    this.logger.log(`User registered: ${input.email}`);
+      this.logger.log(`User registered: ${input.email}`);
 
-    const tokens = this.generateTokens(user.id, user.email);
-    const data = { user, ...tokens };
+      const tokens = this.generateTokens(user.id, user.email);
+      const data = { user, ...tokens };
 
-    return new ApiResponse(data, "Registration successful");
+      return new ApiResponse(data, "Registration successful");
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+        throw new ConflictException("Email already registered");
+      }
+      throw error;
+    }
   }
 
   async login(input: LoginInput) {
@@ -90,8 +92,8 @@ export class AuthService {
     const payload = { sub: userId, email };
 
     return {
-      accessToken: this.jwtService.sign(payload, { secret: this.config.jwtSecret, expiresIn: "15m" }),
-      refreshToken: this.jwtService.sign(payload, { secret: this.config.jwtRefreshSecret, expiresIn: "7d" }),
+      accessToken: this.jwtService.sign(payload, { secret: this.config.jwtSecret, expiresIn: JWT_ACCESS_TTL }),
+      refreshToken: this.jwtService.sign(payload, { secret: this.config.jwtRefreshSecret, expiresIn: JWT_REFRESH_TTL }),
     };
   }
 }

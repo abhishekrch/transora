@@ -18,7 +18,9 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(app.get(HttpExceptionFilter));
+
+  app.enableShutdownHooks();
 
   app.getHttpAdapter().get("/health", (req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });

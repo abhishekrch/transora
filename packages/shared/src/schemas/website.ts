@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { SUPPORTED_LANGUAGES } from "../constants/languages";
+
+const supportedLanguageCodes: string[] = SUPPORTED_LANGUAGES.map((l) => l.code);
 
 export const CreateWebsiteSchema = z.object({
   domain: z
@@ -8,21 +11,39 @@ export const CreateWebsiteSchema = z.object({
     .regex(
       /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
       "Invalid domain format"
-    ),
+    )
+    .transform((val) => val.replace(/^https?:\/\//, "")),
   defaultLanguage: z.string().min(2).max(10).default("en"),
   allowedLanguages: z
     .array(z.string().min(2).max(10))
     .min(1, "At least one language required")
-    .max(50),
+    .max(50)
+    .refine(
+      (langs) => langs.every((l) => supportedLanguageCodes.includes(l)),
+      "One or more unsupported language codes"
+    ),
 });
 
 export const UpdateWebsiteSchema = z.object({
-  domain: z.string().min(1).max(255).optional(),
+  domain: z
+    .string()
+    .min(1)
+    .max(255)
+    .regex(
+      /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
+      "Invalid domain format"
+    )
+    .transform((val) => val.replace(/^https?:\/\//, ""))
+    .optional(),
   defaultLanguage: z.string().min(2).max(10).optional(),
   allowedLanguages: z
     .array(z.string().min(2).max(10))
     .min(1)
     .max(50)
+    .refine(
+      (langs) => langs.every((l) => supportedLanguageCodes.includes(l)),
+      "One or more unsupported language codes"
+    )
     .optional(),
   switcherPosition: z
     .enum(["top-left", "top-right", "bottom-left", "bottom-right"])
@@ -34,8 +55,8 @@ export const UpdateWebsiteSchema = z.object({
 });
 
 export const WebsiteSchema = z.object({
-  id: z.string().uuid(),
-  userId: z.string().uuid(),
+  id: z.uuid(),
+  userId: z.uuid(),
   domain: z.string(),
   apiKey: z.string(),
   defaultLanguage: z.string(),
