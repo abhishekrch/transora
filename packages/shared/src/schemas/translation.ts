@@ -7,7 +7,6 @@ export const TranslateBatchSchema = z.object({
     .max(100, "Max 100 texts per batch"),
   targetLang: z.string().min(2).max(10),
   sourceLang: z.string().min(2).max(10).optional(),
-  domain: z.string().min(1),
   containsPersonalData: z.boolean().optional(),
   ttlDays: z.number().min(1).max(365).optional(),
 });

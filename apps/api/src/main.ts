@@ -29,10 +29,6 @@ async function bootstrap() {
 
   app.enableShutdownHooks();
 
-  app.getHttpAdapter().get("/health", (req, res) => {
-    res.json({ status: "ok", timestamp: new Date().toISOString() });
-  });
-
   await app.listen(config.get("PORT", { infer: true }));
 }
 

@@ -8,3 +8,7 @@ export const TOKEN_TTL_SECONDS = 60 * 60; // 1 hour
 export const JWT_ACCESS_TTL = "15m";
 export const JWT_REFRESH_TTL = "7d";
 export const PERSONAL_DATA_TTL_DAYS = 30;
+
+// Azure Translator API
+export const AZURE_MAX_RETRIES = 3;
+export const AZURE_TIMEOUT_MS = 10_000;
