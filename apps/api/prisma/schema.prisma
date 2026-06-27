@@ -1,0 +1,126 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/prisma/generated/prisma"
+  previewFeatures = ["partialIndexes"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  companyName  String?  @map("company_name") @db.VarChar(255)
+  emailVerified Boolean  @default(false) @map("email_verified")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamp()
+
+  websites Website[]
+  auditLog AuditLog[]
+
+  @@map("users")
+}
+
+model Website {
+  id               String   @id @default(uuid()) @db.Uuid
+  userId           String   @map("user_id") @db.Uuid
+  domain           String   @db.VarChar(255)
+  apiKey           String   @unique @map("api_key") @db.VarChar(64)
+  defaultLanguage  String   @default("en") @map("default_language") @db.VarChar(10)
+  allowedLanguages String[] @map("allowed_languages")
+  rateLimitPerMin  Int      @default(100) @map("rate_limit_per_min")
+  dailyCharLimit   Int      @default(100000) @map("daily_char_limit")
+  switcherPosition String   @default("bottom-right") @map("switcher_position") @db.VarChar(20)
+  switcherStyle    String   @default("dropdown") @map("switcher_style") @db.VarChar(20)
+  seoHreflang      Boolean  @default(true) @map("seo_hreflang")
+  seoMetaTranslate Boolean  @default(true) @map("seo_meta_translate")
+  isActive         Boolean  @default(true) @map("is_active")
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamp()
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  glossary    Glossary[]
+  stats       DailyStats[]
+  translations Translation[]
+
+  @@index([userId])
+  @@index([apiKey])
+  @@map("websites")
+}
+
+model Translation {
+  id             String    @id @default(uuid()) @db.Uuid
+  websiteId      String    @map("website_id") @db.Uuid
+  sourceHash     String    @map("source_hash") @db.VarChar(64)
+  sourceText     String    @map("source_text") @db.Text()
+  sourceLang     String    @map("source_lang") @db.VarChar(10)
+  targetLang     String    @map("target_lang") @db.VarChar(10)
+  translatedText String    @map("translated_text") @db.Text()
+  charCount      Int       @map("char_count")
+  isPersonal     Boolean   @default(false) @map("is_personal")
+  expiresAt      DateTime? @map("expires_at") @db.Timestamp()
+  hitCount       Int       @default(0) @map("hit_count")
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamp()
+
+  website Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+
+  @@unique([websiteId, sourceHash, targetLang])
+  @@index([websiteId])
+  @@index([targetLang])
+  @@index([expiresAt], where: raw("expires_at IS NOT NULL"))
+  @@map("translations")
+}
+
+model Glossary {
+  id             String   @id @default(uuid()) @db.Uuid
+  websiteId      String   @map("website_id") @db.Uuid
+  sourceText     String   @map("source_text") @db.Text()
+  targetLang     String   @map("target_lang") @db.VarChar(10)
+  translatedText String   @map("translated_text") @db.Text()
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp()
+
+  website Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+
+  @@unique([websiteId, sourceText, targetLang])
+  @@map("glossary")
+}
+
+model AuditLog {
+  id           String    @id @default(uuid()) @db.Uuid
+  userId       String?   @map("user_id") @db.Uuid
+  action       String    @db.VarChar(50)
+  resourceType String?   @map("resource_type") @db.VarChar(50)
+  resourceId   String?   @map("resource_id") @db.Uuid
+  metadata     Json?
+  ipAddress    String?   @map("ip_address") @db.VarChar(45)
+  userAgent    String?   @map("user_agent") @db.Text()
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp()
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("audit_log")
+}
+
+model DailyStats {
+  id               String   @id @default(uuid()) @db.Uuid
+  websiteId        String   @map("website_id") @db.Uuid
+  date             DateTime @db.Date()
+  totalTranslations Int     @default(0) @map("total_translations")
+  cacheHits        Int      @default(0) @map("cache_hits")
+  cacheMisses      Int      @default(0) @map("cache_misses")
+  azureCalls       Int      @default(0) @map("azure_calls")
+  charsTranslated  Int      @default(0) @map("chars_translated")
+  uniqueLanguages  String[] @default([]) @map("unique_languages")
+  uniquePages      String[] @default([]) @map("unique_pages")
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamp()
+
+  website Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+
+  @@unique([websiteId, date])
+  @@map("daily_stats")
+}
