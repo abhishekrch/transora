@@ -4,8 +4,12 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "prisma/generated/**/*.ts"],
   "exclude": ["node_modules", "dist", "**/__tests__/**"]
 }

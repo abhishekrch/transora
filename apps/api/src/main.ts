@@ -1,9 +1,8 @@
 import { NestFactory } from "@nestjs/core";
-import { ValidationPipe } from "@nestjs/common";
 import { Logger } from "nestjs-pino";
-import { AppModule } from "./app.module";
-import { AppConfig } from "./config/app.config";
-import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
+import { AppModule } from "@/app.module";
+import { AppConfig } from "@/config/app.config";
+import { HttpExceptionFilter } from "@/common/filters/http-exception.filter";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -18,14 +17,6 @@ async function bootstrap() {
     origin: [config.dashboardUrl],
     credentials: true,
   });
-
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    })
-  );
 
   app.useGlobalFilters(new HttpExceptionFilter());
 
