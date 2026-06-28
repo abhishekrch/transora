@@ -8,6 +8,7 @@ import { Features } from "@/features/landing/components/Features";
 import { HowItWorks } from "@/features/landing/components/HowItWorks";
 import { CTA } from "@/features/landing/components/CTA";
 import { Footer } from "@/features/landing/components/Footer";
+import { GridBackground } from "@transora/ui/components/grid-background";
 
 export const Route = createFileRoute("/")({
   component: IndexPage,
@@ -27,13 +28,7 @@ function LandingPage() {
   return (
     <div className="relative min-h-[100dvh] bg-background">
       <div className="mx-auto max-w-7xl px-6 relative min-h-[100dvh]">
-        <div 
-          className="absolute inset-y-0 left-6 right-6 opacity-[0.22] pointer-events-none z-0 border-l border-r border-border/30"
-          style={{
-            backgroundImage: 'linear-gradient(to right, #CBD5E1 1px, transparent 1px), linear-gradient(to bottom, #CBD5E1 1px, transparent 1px)',
-            backgroundSize: '40px 40px'
-          }}
-        />
+        <GridBackground />
         
         <div className="relative z-10">
           <Navigation />

@@ -1,4 +1,5 @@
-import { Link } from "@tanstack/react-router";
+import { Copyright } from "@transora/ui/components/copyright";
+import { Logo } from "@transora/ui/components/logo";
 
 const footerLinks = [
   { label: "Features", href: "#features" },
@@ -12,9 +13,7 @@ export function Footer() {
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between border-t border-border/40 pt-8">
           
           <div className="max-w-xs space-y-3">
-            <Link to="/" className="text-base font-bold tracking-tight text-foreground">
-              transora
-            </Link>
+            <Logo />
             <p className="text-xs leading-relaxed text-secondary/70">
               Translate your website into 100+ languages with one script tag. Zero complex configuration.
             </p>
@@ -41,7 +40,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 text-left text-xs text-secondary/50">
-          &copy; {new Date().getFullYear()} Transora. All rights reserved.
+          <Copyright />
         </div>
       </div>
     </footer>
