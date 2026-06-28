@@ -18,6 +18,33 @@ export const RefreshTokenSchema = z.object({
   refreshToken: z.string().min(1),
 });
 
+export const AuthTokensSchema = z.object({
+  accessToken: z.string(),
+  refreshToken: z.string(),
+});
+
+export const AuthResponseSchema = z.object({
+  user: z.object({
+    id: z.string(),
+    email: z.string(),
+    companyName: z.string().nullable(),
+  }),
+  accessToken: z.string(),
+  refreshToken: z.string(),
+});
+
+export const ApiErrorSchema = z.object({
+  statusCode: z.number(),
+  message: z.string(),
+  error: z.string(),
+  details: z
+    .array(z.object({ field: z.string(), message: z.string() }))
+    .optional(),
+});
+
 export type RegisterInput = z.infer<typeof RegisterSchema>;
 export type LoginInput = z.infer<typeof LoginSchema>;
 export type RefreshTokenInput = z.infer<typeof RefreshTokenSchema>;
+export type AuthTokens = z.infer<typeof AuthTokensSchema>;
+export type AuthResponse = z.infer<typeof AuthResponseSchema>;
+export type ApiError = z.infer<typeof ApiErrorSchema>;

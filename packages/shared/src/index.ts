@@ -14,3 +14,7 @@ export * from "./constants/limits";
 
 // Response wrappers
 export * from "./response/api-response";
+
+// API client
+export { apiClient, configureApiClient } from "./api/client";
+export { apiRoutes } from "./api/routes";
