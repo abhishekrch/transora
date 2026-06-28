@@ -18,6 +18,8 @@ async function bootstrap() {
 
   app.use(helmet());
 
+  app.getHttpAdapter().getInstance().set("trust proxy", "loopback");
+
   app.enableCors({
     origin: [config.get("DASHBOARD_URL", { infer: true })],
     credentials: true,
