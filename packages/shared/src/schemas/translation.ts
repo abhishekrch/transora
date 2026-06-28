@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const TranslateBatchSchema = z.object({
   texts: z
-    .array(z.string().min(1).max(5000))
+    .array(z.string().trim().min(1, "Text cannot be empty").max(5000))
     .min(1, "At least one text required")
     .max(100, "Max 100 texts per batch"),
   targetLang: z.string().min(2).max(10),
@@ -37,12 +37,17 @@ export const GlossarySchema = z.object({
 });
 
 export const CreateGlossarySchema = z.object({
-  sourceText: z.string().min(1).max(5000),
+  sourceText: z.string().trim().min(1, "Source text is required").max(5000),
   targetLang: z.string().min(2).max(10),
-  translatedText: z.string().min(1).max(5000),
+  translatedText: z.string().trim().min(1, "Translated text is required").max(5000),
+});
+
+export const UpdateGlossarySchema = z.object({
+  translatedText: z.string().trim().min(1, "Translated text is required").max(5000),
 });
 
 export type TranslateBatchInput = z.infer<typeof TranslateBatchSchema>;
 export type Translation = z.infer<typeof TranslationSchema>;
 export type Glossary = z.infer<typeof GlossarySchema>;
 export type CreateGlossaryInput = z.infer<typeof CreateGlossarySchema>;
+export type UpdateGlossaryInput = z.infer<typeof UpdateGlossarySchema>;

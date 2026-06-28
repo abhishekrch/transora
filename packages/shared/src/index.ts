@@ -1,8 +1,9 @@
-// Schemas (includes types via z.infer)
+// Schemas
 export * from "./schemas/auth";
 export * from "./schemas/user";
 export * from "./schemas/website";
 export * from "./schemas/translation";
+export * from "./schemas/pagination";
 
 // Constants
 export * from "./constants/languages";

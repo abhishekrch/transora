@@ -8,6 +8,7 @@ import { HealthModule } from "@/health/health.module";
 import { AuthModule } from "@/modules/auth/auth.module";
 import { WebsiteModule } from "@/modules/website/website.module";
 import { TranslateModule } from "@/modules/translate/translate.module";
+import { GlossaryModule } from "@/modules/glossary/glossary.module";
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TranslateModule } from "@/modules/translate/translate.module";
     AuthModule,
     WebsiteModule,
     TranslateModule,
+    GlossaryModule,
   ],
 })
 export class AppModule {}
