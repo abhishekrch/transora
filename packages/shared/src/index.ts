@@ -6,6 +6,7 @@ export * from "./schemas/translation";
 export * from "./schemas/pagination";
 export * from "./schemas/audit";
 export * from "./schemas/email";
+export * from "./schemas/stats";
 
 // Constants
 export * from "./constants/languages";

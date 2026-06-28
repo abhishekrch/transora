@@ -131,6 +131,22 @@ export class TranslateService {
     const totalChars = input.texts.reduce((sum, t) => sum + t.length, 0);
     const todayDate = new Date(today);
 
+    // TODO: Fix this race condition later
+    const existing = await this.prisma.dailyStats.findUnique({
+      where: {
+        websiteId_date: {
+          websiteId,
+          date: todayDate,
+        },
+      },
+      select: { uniqueLanguages: true },
+    });
+
+    const existingLangs = existing?.uniqueLanguages ?? [];
+    const updatedLangs = existingLangs.includes(input.targetLang)
+      ? existingLangs
+      : [...existingLangs, input.targetLang];
+
     await this.prisma.dailyStats.upsert({
       where: {
         websiteId_date: {
@@ -154,6 +170,7 @@ export class TranslateService {
         cacheMisses: { increment: azureCalls },
         azureCalls: { increment: azureCalls },
         charsTranslated: { increment: totalChars },
+        uniqueLanguages: updatedLangs,
       },
     });
   }
