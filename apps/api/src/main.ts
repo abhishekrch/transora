@@ -27,7 +27,7 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(new ResponseInterceptor());
 
-  app.useGlobalFilters(app.get(HttpExceptionFilter));
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   app.enableShutdownHooks();
 
