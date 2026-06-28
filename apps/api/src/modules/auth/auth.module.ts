@@ -5,9 +5,10 @@ import { AuthController } from "@/modules/auth/auth.controller";
 import { AuthService } from "@/modules/auth/auth.service";
 import { JwtStrategy } from "@/modules/auth/strategies/jwt.strategy";
 import { JwtAuthGuard } from "@/modules/auth/guards/jwt-auth.guard";
+import { EmailModule } from "@/modules/email/email.module";
 
 @Module({
-  imports: [PassportModule, JwtModule.register({})],
+  imports: [PassportModule, JwtModule.register({}), EmailModule],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, JwtAuthGuard],
   exports: [AuthService, JwtAuthGuard],

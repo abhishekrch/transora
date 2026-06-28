@@ -27,6 +27,7 @@ const envSchema = z.object({
 
   // Email
   RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
+  EMAIL_FROM_ADDRESS: z.string().default("Transora <noreply@transora.io>"),
 
   // Dashboard
   DASHBOARD_URL: z.string().url().default("http://localhost:3001"),

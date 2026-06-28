@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "@/prisma/prisma.service";
 import { PasswordService } from "@/common/services/password.service";
+import { EmailService } from "@/modules/email/email.service";
 import { JWT_ACCESS_TTL, JWT_REFRESH_TTL } from "@transora/shared";
 import type { RegisterInput, LoginInput } from "@transora/shared";
 import type { EnvConfig } from "@/config/env.validation";
@@ -16,7 +17,8 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly config: ConfigService<EnvConfig, true>,
-    private readonly passwordService: PasswordService
+    private readonly passwordService: PasswordService,
+    private readonly emailService: EmailService
   ) {}
 
   async register(input: RegisterInput) {
@@ -29,6 +31,13 @@ export class AuthService {
       });
 
       this.logger.log(`User registered: ${input.email}`);
+
+      this.emailService.send({
+        to: user.email,
+        template: "welcome",
+        variables: { name: user.companyName || "there" },
+        userId: user.id,
+      }).catch((err) => this.logger.warn(`Failed to queue welcome email: ${err}`));
 
       const tokens = this.generateTokens(user.id, user.email);
 

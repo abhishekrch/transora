@@ -10,6 +10,7 @@ import { WebsiteModule } from "@/modules/website/website.module";
 import { TranslateModule } from "@/modules/translate/translate.module";
 import { GlossaryModule } from "@/modules/glossary/glossary.module";
 import { AuditModule } from "@/modules/audit/audit.module";
+import { EmailModule } from "@/modules/email/email.module";
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AuditModule } from "@/modules/audit/audit.module";
     TranslateModule,
     GlossaryModule,
     AuditModule,
+    EmailModule,
   ],
 })
 export class AppModule {}
