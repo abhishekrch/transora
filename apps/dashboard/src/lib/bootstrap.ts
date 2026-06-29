@@ -7,23 +7,27 @@ export function bootstrap() {
     baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:3000",
     getAccessToken: () => useAuthStore.getState().accessToken,
     refreshAccessToken: async () => {
-      const refreshToken = useAuthStore.getState().refreshToken;
-      if (!refreshToken) {
-        useAuthStore.getState().clearAuth();
-        return null;
-      }
       try {
-        const response = await authApi.refresh(refreshToken);
-        const { accessToken, refreshToken: newRefreshToken } = response;
-        const user = useAuthStore.getState().user;
-        if (user) {
-          useAuthStore.getState().setAuth(user, accessToken, newRefreshToken);
-        }
-        return accessToken;
+        const response = await authApi.refresh();
+        const newToken = response.accessToken;
+        useAuthStore.getState().setAccessToken(newToken);
+        return newToken;
       } catch {
         useAuthStore.getState().clearAuth();
         return null;
       }
     },
   });
+
+  const { isAuthenticated, accessToken } = useAuthStore.getState();
+  if (isAuthenticated && !accessToken) {
+    authApi
+      .refresh()
+      .then((data) => {
+        useAuthStore.getState().setAccessToken(data.accessToken);
+      })
+      .catch(() => {
+        useAuthStore.getState().clearAuth();
+      });
+  }
 }

@@ -4,11 +4,13 @@ import { cn } from "@transora/ui/lib/utils"
 interface GridBackgroundProps extends React.ComponentProps<"div"> {
   opacity?: number
   gridSize?: number
+  strokeColor?: string
 }
 
 export function GridBackground({
   opacity = 0.22,
   gridSize = 40,
+  strokeColor = "#CBD5E1",
   className,
   ...props
 }: GridBackgroundProps) {
@@ -21,7 +23,7 @@ export function GridBackground({
       )}
       style={{
         opacity,
-        backgroundImage: `linear-gradient(to right, var(--border) 1px, transparent 1px), linear-gradient(to bottom, var(--border) 1px, transparent 1px)`,
+        backgroundImage: `linear-gradient(to right, ${strokeColor} 1px, transparent 1px), linear-gradient(to bottom, ${strokeColor} 1px, transparent 1px)`,
         backgroundSize: `${gridSize}px ${gridSize}px`
       }}
       {...props}

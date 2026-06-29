@@ -11,7 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
+import { Route as AuthenticatedWebsitesIndexRouteImport } from './routes/_authenticated/websites/index'
+import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedWebsitesAddRouteImport } from './routes/_authenticated/websites/add'
+import { Route as AuthenticatedWebsitesIdRouteImport } from './routes/_authenticated/websites/$id'
+import { Route as AuthenticatedSettingsSecurityRouteImport } from './routes/_authenticated/settings/security'
+import { Route as AuthenticatedWebsitesIdSettingsRouteImport } from './routes/_authenticated/websites/$id/settings'
+import { Route as AuthenticatedWebsitesIdGlossaryRouteImport } from './routes/_authenticated/websites/$id/glossary'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -23,38 +33,160 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedWebsitesIndexRoute =
+  AuthenticatedWebsitesIndexRouteImport.update({
+    id: '/websites/',
+    path: '/websites/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedSettingsIndexRoute =
+  AuthenticatedSettingsIndexRouteImport.update({
+    id: '/settings/',
+    path: '/settings/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedWebsitesAddRoute =
+  AuthenticatedWebsitesAddRouteImport.update({
+    id: '/websites/add',
+    path: '/websites/add',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedWebsitesIdRoute = AuthenticatedWebsitesIdRouteImport.update({
+  id: '/websites/$id',
+  path: '/websites/$id',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedSettingsSecurityRoute =
+  AuthenticatedSettingsSecurityRouteImport.update({
+    id: '/settings/security',
+    path: '/settings/security',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedWebsitesIdSettingsRoute =
+  AuthenticatedWebsitesIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedWebsitesIdRoute,
+  } as any)
+const AuthenticatedWebsitesIdGlossaryRoute =
+  AuthenticatedWebsitesIdGlossaryRouteImport.update({
+    id: '/glossary',
+    path: '/glossary',
+    getParentRoute: () => AuthenticatedWebsitesIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/analytics': typeof AuthenticatedAnalyticsRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/settings/security': typeof AuthenticatedSettingsSecurityRoute
+  '/websites/$id': typeof AuthenticatedWebsitesIdRouteWithChildren
+  '/websites/add': typeof AuthenticatedWebsitesAddRoute
+  '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/websites/': typeof AuthenticatedWebsitesIndexRoute
+  '/websites/$id/glossary': typeof AuthenticatedWebsitesIdGlossaryRoute
+  '/websites/$id/settings': typeof AuthenticatedWebsitesIdSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/analytics': typeof AuthenticatedAnalyticsRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/settings/security': typeof AuthenticatedSettingsSecurityRoute
+  '/websites/$id': typeof AuthenticatedWebsitesIdRouteWithChildren
+  '/websites/add': typeof AuthenticatedWebsitesAddRoute
+  '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/websites': typeof AuthenticatedWebsitesIndexRoute
+  '/websites/$id/glossary': typeof AuthenticatedWebsitesIdGlossaryRoute
+  '/websites/$id/settings': typeof AuthenticatedWebsitesIdSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/settings/security': typeof AuthenticatedSettingsSecurityRoute
+  '/_authenticated/websites/$id': typeof AuthenticatedWebsitesIdRouteWithChildren
+  '/_authenticated/websites/add': typeof AuthenticatedWebsitesAddRoute
+  '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/websites/': typeof AuthenticatedWebsitesIndexRoute
+  '/_authenticated/websites/$id/glossary': typeof AuthenticatedWebsitesIdGlossaryRoute
+  '/_authenticated/websites/$id/settings': typeof AuthenticatedWebsitesIdSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/analytics'
+    | '/dashboard'
+    | '/settings/security'
+    | '/websites/$id'
+    | '/websites/add'
+    | '/settings/'
+    | '/websites/'
+    | '/websites/$id/glossary'
+    | '/websites/$id/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register'
-  id: '__root__' | '/' | '/login' | '/register'
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/analytics'
+    | '/dashboard'
+    | '/settings/security'
+    | '/websites/$id'
+    | '/websites/add'
+    | '/settings'
+    | '/websites'
+    | '/websites/$id/glossary'
+    | '/websites/$id/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/login'
+    | '/register'
+    | '/_authenticated/analytics'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/settings/security'
+    | '/_authenticated/websites/$id'
+    | '/_authenticated/websites/add'
+    | '/_authenticated/settings/'
+    | '/_authenticated/websites/'
+    | '/_authenticated/websites/$id/glossary'
+    | '/_authenticated/websites/$id/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
 }
@@ -75,6 +207,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -82,11 +221,115 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/analytics': {
+      id: '/_authenticated/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AuthenticatedAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/websites/': {
+      id: '/_authenticated/websites/'
+      path: '/websites'
+      fullPath: '/websites/'
+      preLoaderRoute: typeof AuthenticatedWebsitesIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/settings/': {
+      id: '/_authenticated/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/websites/add': {
+      id: '/_authenticated/websites/add'
+      path: '/websites/add'
+      fullPath: '/websites/add'
+      preLoaderRoute: typeof AuthenticatedWebsitesAddRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/websites/$id': {
+      id: '/_authenticated/websites/$id'
+      path: '/websites/$id'
+      fullPath: '/websites/$id'
+      preLoaderRoute: typeof AuthenticatedWebsitesIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/settings/security': {
+      id: '/_authenticated/settings/security'
+      path: '/settings/security'
+      fullPath: '/settings/security'
+      preLoaderRoute: typeof AuthenticatedSettingsSecurityRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/websites/$id/settings': {
+      id: '/_authenticated/websites/$id/settings'
+      path: '/settings'
+      fullPath: '/websites/$id/settings'
+      preLoaderRoute: typeof AuthenticatedWebsitesIdSettingsRouteImport
+      parentRoute: typeof AuthenticatedWebsitesIdRoute
+    }
+    '/_authenticated/websites/$id/glossary': {
+      id: '/_authenticated/websites/$id/glossary'
+      path: '/glossary'
+      fullPath: '/websites/$id/glossary'
+      preLoaderRoute: typeof AuthenticatedWebsitesIdGlossaryRouteImport
+      parentRoute: typeof AuthenticatedWebsitesIdRoute
+    }
   }
 }
 
+interface AuthenticatedWebsitesIdRouteChildren {
+  AuthenticatedWebsitesIdGlossaryRoute: typeof AuthenticatedWebsitesIdGlossaryRoute
+  AuthenticatedWebsitesIdSettingsRoute: typeof AuthenticatedWebsitesIdSettingsRoute
+}
+
+const AuthenticatedWebsitesIdRouteChildren: AuthenticatedWebsitesIdRouteChildren =
+  {
+    AuthenticatedWebsitesIdGlossaryRoute: AuthenticatedWebsitesIdGlossaryRoute,
+    AuthenticatedWebsitesIdSettingsRoute: AuthenticatedWebsitesIdSettingsRoute,
+  }
+
+const AuthenticatedWebsitesIdRouteWithChildren =
+  AuthenticatedWebsitesIdRoute._addFileChildren(
+    AuthenticatedWebsitesIdRouteChildren,
+  )
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedSettingsSecurityRoute: typeof AuthenticatedSettingsSecurityRoute
+  AuthenticatedWebsitesIdRoute: typeof AuthenticatedWebsitesIdRouteWithChildren
+  AuthenticatedWebsitesAddRoute: typeof AuthenticatedWebsitesAddRoute
+  AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
+  AuthenticatedWebsitesIndexRoute: typeof AuthenticatedWebsitesIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedSettingsSecurityRoute: AuthenticatedSettingsSecurityRoute,
+  AuthenticatedWebsitesIdRoute: AuthenticatedWebsitesIdRouteWithChildren,
+  AuthenticatedWebsitesAddRoute: AuthenticatedWebsitesAddRoute,
+  AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
+  AuthenticatedWebsitesIndexRoute: AuthenticatedWebsitesIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
 }

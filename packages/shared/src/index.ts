@@ -18,3 +18,6 @@ export * from "./response/api-response";
 // API client
 export { apiClient, configureApiClient } from "./api/client";
 export { apiRoutes } from "./api/routes";
+
+// Utilities
+export * from "./utils/string";
