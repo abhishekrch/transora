@@ -7,6 +7,7 @@ import { EmailService } from "@/modules/email/email.service";
 import { JWT_ACCESS_TTL, JWT_REFRESH_TTL } from "@transora/shared";
 import type { RegisterInput, LoginInput } from "@transora/shared";
 import type { EnvConfig } from "@/config/env.validation";
+import type { Response } from "express";
 import { Prisma } from "@prisma/client";
 
 @Injectable()
@@ -105,5 +106,32 @@ export class AuthService {
         expiresIn: JWT_REFRESH_TTL,
       }),
     };
+  }
+
+  setRefreshTokenCookie(res: Response, refreshToken: string) {
+    const isProduction = this.config.get("NODE_ENV", { infer: true }) === "production";
+    const cookieDomain = this.config.get("COOKIE_DOMAIN", { infer: true });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "strict" : "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      ...(cookieDomain ? { domain: cookieDomain } : {}),
+    });
+  }
+
+  clearRefreshTokenCookie(res: Response) {
+    const isProduction = this.config.get("NODE_ENV", { infer: true }) === "production";
+    const cookieDomain = this.config.get("COOKIE_DOMAIN", { infer: true });
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "strict" : "lax",
+      path: "/",
+      ...(cookieDomain ? { domain: cookieDomain } : {}),
+    });
   }
 }

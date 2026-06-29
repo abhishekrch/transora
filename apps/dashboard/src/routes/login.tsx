@@ -8,7 +8,7 @@ import { Logo } from "@transora/ui/components/logo";
 export const Route = createFileRoute("/login")({
   beforeLoad: () => {
     if (useAuthStore.getState().isAuthenticated) {
-      throw redirect({ to: "/" });
+      throw redirect({ to: "/dashboard" });
     }
   },
   component: LoginPage,

@@ -2,6 +2,7 @@ import { NestFactory } from "@nestjs/core";
 import { ConfigService } from "@nestjs/config";
 import { Logger } from "nestjs-pino";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 import { AppModule } from "@/app.module";
 import { HttpExceptionFilter } from "@/common/filters/http-exception.filter";
 import { ResponseInterceptor } from "@/common/interceptors/response.interceptor";
@@ -16,6 +17,7 @@ async function bootstrap() {
 
   const config = app.get(ConfigService<EnvConfig, true>);
 
+  app.use(cookieParser(config.get("COOKIE_SECRET", { infer: true }) || undefined));
   app.use(helmet());
 
   app.getHttpAdapter().getInstance().set("trust proxy", "loopback");

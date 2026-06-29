@@ -31,6 +31,10 @@ const envSchema = z.object({
 
   // Dashboard
   DASHBOARD_URL: z.string().url().default("http://localhost:3001"),
+
+  // Cookies
+  COOKIE_SECRET: z.string().min(32).optional(),
+  COOKIE_DOMAIN: z.string().optional(),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

@@ -7,9 +7,9 @@ type User = AuthResponse["user"];
 interface AuthState {
   user: User | null;
   accessToken: string | null;
-  refreshToken: string | null;
   isAuthenticated: boolean;
-  setAuth: (user: User, accessToken: string, refreshToken: string) => void;
+  setAuth: (user: User, accessToken: string) => void;
+  setAccessToken: (accessToken: string) => void;
   clearAuth: () => void;
   updateUser: (user: Partial<User>) => void;
 }
@@ -19,22 +19,22 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       user: null,
       accessToken: null,
-      refreshToken: null,
       isAuthenticated: false,
 
-      setAuth: (user, accessToken, refreshToken) =>
+      setAuth: (user, accessToken) =>
         set({
           user,
           accessToken,
-          refreshToken,
           isAuthenticated: true,
         }),
+
+      setAccessToken: (accessToken) =>
+        set({ accessToken }),
 
       clearAuth: () =>
         set({
           user: null,
           accessToken: null,
-          refreshToken: null,
           isAuthenticated: false,
         }),
 
@@ -48,8 +48,8 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "transora-auth",
       partialize: (state) => ({
-        refreshToken: state.refreshToken,
         user: state.user,
+        isAuthenticated: state.isAuthenticated,
       }),
     },
   ),

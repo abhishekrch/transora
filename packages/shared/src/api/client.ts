@@ -10,6 +10,7 @@ export const apiClient = axios.create({
     "Content-Type": "application/json",
   },
   timeout: 15000,
+  withCredentials: true,
 });
 
 let getAccessToken: (() => string | null) | null = null;

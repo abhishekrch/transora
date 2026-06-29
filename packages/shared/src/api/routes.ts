@@ -3,6 +3,7 @@ export const apiRoutes = {
     login: () => "/auth/login" as const,
     register: () => "/auth/register" as const,
     refresh: () => "/auth/refresh" as const,
+    logout: () => "/auth/logout" as const,
     me: () => "/auth/me" as const,
   },
   websites: {

@@ -11,11 +11,9 @@ export function useLogin() {
   return useMutation({
     mutationFn: authApi.login,
     onSuccess: (data) => {
-      useAuthStore
-        .getState()
-        .setAuth(data.user, data.accessToken, data.refreshToken);
+      useAuthStore.getState().setAuth(data.user, data.accessToken);
       queryClient.invalidateQueries({ queryKey: authQueryKeys.all() });
-      navigate({ to: "/" });
+      navigate({ to: "/dashboard" });
     },
   });
 }
@@ -27,11 +25,9 @@ export function useRegister() {
   return useMutation({
     mutationFn: authApi.register,
     onSuccess: (data) => {
-      useAuthStore
-        .getState()
-        .setAuth(data.user, data.accessToken, data.refreshToken);
+      useAuthStore.getState().setAuth(data.user, data.accessToken);
       queryClient.invalidateQueries({ queryKey: authQueryKeys.all() });
-      navigate({ to: "/" });
+      navigate({ to: "/dashboard" });
     },
   });
 }
@@ -41,6 +37,8 @@ export function useLogout() {
   const queryClient = useQueryClient();
 
   return () => {
+    authApi.logout().catch(() => {
+    });
     useAuthStore.getState().clearAuth();
     queryClient.clear();
     navigate({ to: "/login" });

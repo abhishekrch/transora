@@ -20,7 +20,6 @@ export const RefreshTokenSchema = z.object({
 
 export const AuthTokensSchema = z.object({
   accessToken: z.string(),
-  refreshToken: z.string(),
 });
 
 export const AuthResponseSchema = z.object({
@@ -30,7 +29,6 @@ export const AuthResponseSchema = z.object({
     companyName: z.string().nullable(),
   }),
   accessToken: z.string(),
-  refreshToken: z.string(),
 });
 
 export const ApiErrorSchema = z.object({
