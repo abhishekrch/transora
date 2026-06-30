@@ -2,12 +2,23 @@ import { createFileRoute, Outlet, redirect, useRouter } from "@tanstack/react-ro
 import { useAuthStore } from "@/features/auth/hooks/use-auth";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Button } from "@transora/ui/components/button";
+import { queryClient } from "@/lib/query-client";
+import { authQueries } from "@/features/auth/api/auth-queries";
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: ({ location }) => {
     const { isAuthenticated } = useAuthStore.getState();
     if (!isAuthenticated) {
       throw redirect({ to: "/login", search: { redirect: location.href } });
+    }
+  },
+  loader: async () => {
+    try {
+      const user = await queryClient.ensureQueryData(authQueries.me());
+      useAuthStore.getState().updateUser(user);
+      return { user };
+    } catch (error) {
+      throw error;
     }
   },
   component: AuthenticatedLayout,
