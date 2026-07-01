@@ -4,6 +4,8 @@ import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Button } from "@transora/ui/components/button";
 import { queryClient } from "@/lib/query-client";
 import { authQueries } from "@/features/auth/api/auth-queries";
+import { Suspense } from "react";
+import { Skeleton } from "@transora/ui/components/skeleton";
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: ({ location }) => {
@@ -50,7 +52,15 @@ export const Route = createFileRoute("/_authenticated")({
 function AuthenticatedLayout() {
   return (
     <DashboardLayout>
-      <Outlet />
+      <Suspense fallback={
+        <div className="space-y-6 p-6">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-64 w-full" />
+        </div>
+      }>
+        <Outlet />
+      </Suspense>
     </DashboardLayout>
   );
 }
