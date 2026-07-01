@@ -2,7 +2,6 @@ import { createFileRoute, Outlet, redirect, useRouter } from "@tanstack/react-ro
 import { useAuthStore } from "@/features/auth/hooks/use-auth";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Button } from "@transora/ui/components/button";
-import { queryClient } from "@/lib/query-client";
 import { authQueries } from "@/features/auth/api/auth-queries";
 import { Suspense } from "react";
 import { Skeleton } from "@transora/ui/components/skeleton";
@@ -14,9 +13,9 @@ export const Route = createFileRoute("/_authenticated")({
       throw redirect({ to: "/login", search: { redirect: location.href } });
     }
   },
-  loader: async () => {
+  loader: async ({ context }) => {
     try {
-      const user = await queryClient.ensureQueryData(authQueries.me());
+      const user = await context.queryClient.ensureQueryData(authQueries.me());
       useAuthStore.getState().updateUser(user);
       return { user };
     } catch (error) {

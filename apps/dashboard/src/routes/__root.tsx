@@ -1,9 +1,14 @@
-import { createRootRoute, Outlet, useRouter } from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet, useRouter } from "@tanstack/react-router";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { Toaster } from "@transora/ui/components/sonner";
 import { Button } from "@transora/ui/components/button";
+import type { QueryClient } from "@tanstack/react-query";
 
-export const Route = createRootRoute({
+export interface MyRouterContext {
+  queryClient: QueryClient;
+}
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootComponent,
   errorComponent: ({ error }) => {
     const router = useRouter();
