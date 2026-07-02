@@ -1,38 +1,38 @@
 import * as React from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Languages, Zap, BarChart3, Globe } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@transora/ui/components/card";
 import { Skeleton } from "@transora/ui/components/skeleton";
-import { statsQueries } from "../api/stats-queries";
-import { websiteQueries } from "@/features/websites/api/website-queries";
+import { useGlobalStats } from "@/features/dashboard/hooks/use-global-stats";
 
 export function StatsCards() {
-  const { data: stats, isLoading: statsLoading } = useQuery(statsQueries.overview("30d"));
-  const { data: websites, isLoading: websitesLoading } = useQuery(websiteQueries.list());
-
-  const activeWebsitesCount = websites?.filter((w) => w.isActive).length ?? 0;
-  const isLoading = statsLoading || websitesLoading;
+  const {
+    totalTranslations,
+    cacheHitRate,
+    charsTranslated,
+    activeWebsitesCount,
+    isLoading,
+  } = useGlobalStats();
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <StatCard
         icon={Languages}
         label="Total Translations"
-        value={isLoading ? "—" : (stats?.totalTranslations?.toLocaleString() ?? "0")}
+        value={isLoading ? "—" : totalTranslations.toLocaleString()}
         description="Across all websites"
         loading={isLoading}
       />
       <StatCard
         icon={Zap}
         label="Cache Hit Rate"
-        value={isLoading ? "—" : (stats?.cacheHitRate !== undefined ? `${Math.round(stats.cacheHitRate * 100)}%` : "0%")}
+        value={isLoading ? "—" : `${cacheHitRate}%`}
         description="Requests served from cache"
         loading={isLoading}
       />
       <StatCard
         icon={BarChart3}
         label="Characters Translated"
-        value={isLoading ? "—" : (stats?.charsTranslated?.toLocaleString() ?? "0")}
+        value={isLoading ? "—" : charsTranslated.toLocaleString()}
         description="This month"
         loading={isLoading}
       />

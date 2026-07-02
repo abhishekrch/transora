@@ -18,8 +18,8 @@ import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authentica
 import { Route as AuthenticatedWebsitesIndexRouteImport } from './routes/_authenticated/websites/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedWebsitesAddRouteImport } from './routes/_authenticated/websites/add'
-import { Route as AuthenticatedWebsitesIdRouteImport } from './routes/_authenticated/websites/$id'
 import { Route as AuthenticatedSettingsSecurityRouteImport } from './routes/_authenticated/settings/security'
+import { Route as AuthenticatedWebsitesIdIndexRouteImport } from './routes/_authenticated/websites/$id/index'
 import { Route as AuthenticatedWebsitesIdSettingsRouteImport } from './routes/_authenticated/websites/$id/settings'
 import { Route as AuthenticatedWebsitesIdGlossaryRouteImport } from './routes/_authenticated/websites/$id/glossary'
 
@@ -70,28 +70,29 @@ const AuthenticatedWebsitesAddRoute =
     path: '/websites/add',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedWebsitesIdRoute = AuthenticatedWebsitesIdRouteImport.update({
-  id: '/websites/$id',
-  path: '/websites/$id',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
 const AuthenticatedSettingsSecurityRoute =
   AuthenticatedSettingsSecurityRouteImport.update({
     id: '/settings/security',
     path: '/settings/security',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedWebsitesIdIndexRoute =
+  AuthenticatedWebsitesIdIndexRouteImport.update({
+    id: '/websites/$id/',
+    path: '/websites/$id/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedWebsitesIdSettingsRoute =
   AuthenticatedWebsitesIdSettingsRouteImport.update({
-    id: '/settings',
-    path: '/settings',
-    getParentRoute: () => AuthenticatedWebsitesIdRoute,
+    id: '/websites/$id/settings',
+    path: '/websites/$id/settings',
+    getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedWebsitesIdGlossaryRoute =
   AuthenticatedWebsitesIdGlossaryRouteImport.update({
-    id: '/glossary',
-    path: '/glossary',
-    getParentRoute: () => AuthenticatedWebsitesIdRoute,
+    id: '/websites/$id/glossary',
+    path: '/websites/$id/glossary',
+    getParentRoute: () => AuthenticatedRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -101,12 +102,12 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/settings/security': typeof AuthenticatedSettingsSecurityRoute
-  '/websites/$id': typeof AuthenticatedWebsitesIdRouteWithChildren
   '/websites/add': typeof AuthenticatedWebsitesAddRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/websites/': typeof AuthenticatedWebsitesIndexRoute
   '/websites/$id/glossary': typeof AuthenticatedWebsitesIdGlossaryRoute
   '/websites/$id/settings': typeof AuthenticatedWebsitesIdSettingsRoute
+  '/websites/$id/': typeof AuthenticatedWebsitesIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -115,12 +116,12 @@ export interface FileRoutesByTo {
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/settings/security': typeof AuthenticatedSettingsSecurityRoute
-  '/websites/$id': typeof AuthenticatedWebsitesIdRouteWithChildren
   '/websites/add': typeof AuthenticatedWebsitesAddRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/websites': typeof AuthenticatedWebsitesIndexRoute
   '/websites/$id/glossary': typeof AuthenticatedWebsitesIdGlossaryRoute
   '/websites/$id/settings': typeof AuthenticatedWebsitesIdSettingsRoute
+  '/websites/$id': typeof AuthenticatedWebsitesIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -131,12 +132,12 @@ export interface FileRoutesById {
   '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/settings/security': typeof AuthenticatedSettingsSecurityRoute
-  '/_authenticated/websites/$id': typeof AuthenticatedWebsitesIdRouteWithChildren
   '/_authenticated/websites/add': typeof AuthenticatedWebsitesAddRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/websites/': typeof AuthenticatedWebsitesIndexRoute
   '/_authenticated/websites/$id/glossary': typeof AuthenticatedWebsitesIdGlossaryRoute
   '/_authenticated/websites/$id/settings': typeof AuthenticatedWebsitesIdSettingsRoute
+  '/_authenticated/websites/$id/': typeof AuthenticatedWebsitesIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -147,12 +148,12 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/dashboard'
     | '/settings/security'
-    | '/websites/$id'
     | '/websites/add'
     | '/settings/'
     | '/websites/'
     | '/websites/$id/glossary'
     | '/websites/$id/settings'
+    | '/websites/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -161,12 +162,12 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/dashboard'
     | '/settings/security'
-    | '/websites/$id'
     | '/websites/add'
     | '/settings'
     | '/websites'
     | '/websites/$id/glossary'
     | '/websites/$id/settings'
+    | '/websites/$id'
   id:
     | '__root__'
     | '/'
@@ -176,12 +177,12 @@ export interface FileRouteTypes {
     | '/_authenticated/analytics'
     | '/_authenticated/dashboard'
     | '/_authenticated/settings/security'
-    | '/_authenticated/websites/$id'
     | '/_authenticated/websites/add'
     | '/_authenticated/settings/'
     | '/_authenticated/websites/'
     | '/_authenticated/websites/$id/glossary'
     | '/_authenticated/websites/$id/settings'
+    | '/_authenticated/websites/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -256,13 +257,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWebsitesAddRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/websites/$id': {
-      id: '/_authenticated/websites/$id'
-      path: '/websites/$id'
-      fullPath: '/websites/$id'
-      preLoaderRoute: typeof AuthenticatedWebsitesIdRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
     '/_authenticated/settings/security': {
       id: '/_authenticated/settings/security'
       path: '/settings/security'
@@ -270,57 +264,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsSecurityRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/websites/$id/': {
+      id: '/_authenticated/websites/$id/'
+      path: '/websites/$id'
+      fullPath: '/websites/$id/'
+      preLoaderRoute: typeof AuthenticatedWebsitesIdIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/websites/$id/settings': {
       id: '/_authenticated/websites/$id/settings'
-      path: '/settings'
+      path: '/websites/$id/settings'
       fullPath: '/websites/$id/settings'
       preLoaderRoute: typeof AuthenticatedWebsitesIdSettingsRouteImport
-      parentRoute: typeof AuthenticatedWebsitesIdRoute
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/websites/$id/glossary': {
       id: '/_authenticated/websites/$id/glossary'
-      path: '/glossary'
+      path: '/websites/$id/glossary'
       fullPath: '/websites/$id/glossary'
       preLoaderRoute: typeof AuthenticatedWebsitesIdGlossaryRouteImport
-      parentRoute: typeof AuthenticatedWebsitesIdRoute
+      parentRoute: typeof AuthenticatedRoute
     }
   }
 }
-
-interface AuthenticatedWebsitesIdRouteChildren {
-  AuthenticatedWebsitesIdGlossaryRoute: typeof AuthenticatedWebsitesIdGlossaryRoute
-  AuthenticatedWebsitesIdSettingsRoute: typeof AuthenticatedWebsitesIdSettingsRoute
-}
-
-const AuthenticatedWebsitesIdRouteChildren: AuthenticatedWebsitesIdRouteChildren =
-  {
-    AuthenticatedWebsitesIdGlossaryRoute: AuthenticatedWebsitesIdGlossaryRoute,
-    AuthenticatedWebsitesIdSettingsRoute: AuthenticatedWebsitesIdSettingsRoute,
-  }
-
-const AuthenticatedWebsitesIdRouteWithChildren =
-  AuthenticatedWebsitesIdRoute._addFileChildren(
-    AuthenticatedWebsitesIdRouteChildren,
-  )
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedSettingsSecurityRoute: typeof AuthenticatedSettingsSecurityRoute
-  AuthenticatedWebsitesIdRoute: typeof AuthenticatedWebsitesIdRouteWithChildren
   AuthenticatedWebsitesAddRoute: typeof AuthenticatedWebsitesAddRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
   AuthenticatedWebsitesIndexRoute: typeof AuthenticatedWebsitesIndexRoute
+  AuthenticatedWebsitesIdGlossaryRoute: typeof AuthenticatedWebsitesIdGlossaryRoute
+  AuthenticatedWebsitesIdSettingsRoute: typeof AuthenticatedWebsitesIdSettingsRoute
+  AuthenticatedWebsitesIdIndexRoute: typeof AuthenticatedWebsitesIdIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedSettingsSecurityRoute: AuthenticatedSettingsSecurityRoute,
-  AuthenticatedWebsitesIdRoute: AuthenticatedWebsitesIdRouteWithChildren,
   AuthenticatedWebsitesAddRoute: AuthenticatedWebsitesAddRoute,
   AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
   AuthenticatedWebsitesIndexRoute: AuthenticatedWebsitesIndexRoute,
+  AuthenticatedWebsitesIdGlossaryRoute: AuthenticatedWebsitesIdGlossaryRoute,
+  AuthenticatedWebsitesIdSettingsRoute: AuthenticatedWebsitesIdSettingsRoute,
+  AuthenticatedWebsitesIdIndexRoute: AuthenticatedWebsitesIdIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
