@@ -3,7 +3,7 @@ import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from "axios";
-import type { ApiError } from "../schemas/auth";
+import type { ApiError } from "@/schemas/auth";
 
 export const apiClient = axios.create({
   headers: {

@@ -5,7 +5,7 @@ import { PrismaService } from "@/prisma/prisma.service";
 import { PasswordService } from "@/common/services/password.service";
 import { EmailService } from "@/modules/email/email.service";
 import { JWT_ACCESS_TTL, JWT_REFRESH_TTL } from "@transora/shared";
-import type { RegisterInput, LoginInput } from "@transora/shared";
+import type { RegisterInput, LoginInput, UpdateUserInput, ChangePasswordInput } from "@transora/shared";
 import type { EnvConfig } from "@/config/env.validation";
 import type { Response } from "express";
 import { Prisma } from "@prisma/client";
@@ -91,6 +91,45 @@ export class AuthService {
       where: { id: userId },
       select: { id: true, email: true, companyName: true, emailVerified: true, createdAt: true },
     });
+  }
+
+  async updateProfile(userId: string, input: UpdateUserInput) {
+    const updated = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        companyName: input.companyName,
+      },
+      select: { id: true, email: true, companyName: true, emailVerified: true, createdAt: true },
+    });
+
+    this.logger.log(`User profile updated: ${updated.email}`);
+    return updated;
+  }
+
+  async changePassword(userId: string, input: ChangePasswordInput) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException("User not found");
+    }
+
+    const valid = await this.passwordService.verify(user.passwordHash, input.currentPassword);
+    if (!valid) {
+      throw new UnauthorizedException("Invalid current password");
+    }
+
+    const newPasswordHash = await this.passwordService.hash(input.newPassword);
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        passwordHash: newPasswordHash,
+      },
+    });
+
+    this.logger.log(`User password updated: ${user.email}`);
   }
 
   private generateTokens(userId: string, email: string) {

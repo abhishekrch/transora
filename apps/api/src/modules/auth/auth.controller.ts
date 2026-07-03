@@ -1,5 +1,5 @@
-import { Controller, Post, Get, UseGuards, HttpCode, HttpStatus, Req, Res } from "@nestjs/common";
-import { RegisterSchema, LoginSchema, type RegisterInput, type LoginInput } from "@transora/shared";
+import { Controller, Post, Get, Put, UseGuards, HttpCode, HttpStatus, Req, Res } from "@nestjs/common";
+import { RegisterSchema, LoginSchema, UpdateUserSchema, ChangePasswordSchema, type RegisterInput, type LoginInput, type UpdateUserInput, type ChangePasswordInput } from "@transora/shared";
 import { AuthService } from "./auth.service";
 import { ZodBody } from "@/common/decorators/zod-body.decorator";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
@@ -57,5 +57,25 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   getProfile(@CurrentUser("id") userId: string) {
     return this.authService.getProfile(userId);
+  }
+
+  @Put("profile")
+  @UseGuards(JwtAuthGuard)
+  async updateProfile(
+    @CurrentUser("id") userId: string,
+    @ZodBody(UpdateUserSchema) body: UpdateUserInput,
+  ) {
+    return this.authService.updateProfile(userId, body);
+  }
+
+  @Post("change-password")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  async changePassword(
+    @CurrentUser("id") userId: string,
+    @ZodBody(ChangePasswordSchema) body: ChangePasswordInput,
+  ) {
+    await this.authService.changePassword(userId, body);
+    return { success: true };
   }
 }

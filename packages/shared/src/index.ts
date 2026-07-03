@@ -21,3 +21,4 @@ export { apiRoutes } from "./api/routes";
 
 // Utilities
 export * from "./utils/string";
+export * from "./utils/error";
