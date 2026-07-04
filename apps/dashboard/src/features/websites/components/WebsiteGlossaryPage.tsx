@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateGlossarySchema, type CreateGlossaryInput, SUPPORTED_LANGUAGES } from "@transora/shared";
 import { ArrowLeft, Plus, Trash2, BookOpen } from "lucide-react";
@@ -10,6 +10,7 @@ import { Input } from "@transora/ui/components/input";
 import { Label } from "@transora/ui/components/label";
 import { Card, CardContent } from "@transora/ui/components/card";
 import { Skeleton } from "@transora/ui/components/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@transora/ui/components/select";
 import {
   Dialog,
   DialogContent,
@@ -167,15 +168,22 @@ function AddEntryDialog({ websiteId }: { websiteId: string }) {
           </div>
           <div className="space-y-2">
             <Label htmlFor="targetLang">Target Language</Label>
-            <select
-              id="targetLang"
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
-              {...form.register("targetLang")}
-            >
-              {SUPPORTED_LANGUAGES.map((lang) => (
-                <option key={lang.code} value={lang.code}>{lang.name}</option>
-              ))}
-            </select>
+            <Controller
+              control={form.control}
+              name="targetLang"
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="w-full" id="targetLang">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SUPPORTED_LANGUAGES.map((lang) => (
+                      <SelectItem key={lang.code} value={lang.code}>{lang.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="translatedText">Translation</Label>

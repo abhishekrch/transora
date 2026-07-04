@@ -7,7 +7,8 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@prisma/client": ["./src/prisma/generated/prisma/client"]
     }
   },
   "include": ["src/**/*.ts", "prisma/generated/**/*.ts"],

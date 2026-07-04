@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException, Logger } from "@nestjs/common";
 import { PrismaService } from "@/prisma/prisma.service";
+import type { AuditLog, Prisma } from "@prisma/client";
 import { maskSensitiveData } from "@/common/utils/sensitive-fields";
 import type { CreateAuditLogInput, AuditLogFilterInput, PaginationInput, PaginatedResponse } from "@transora/shared";
-import type { AuditLog, Prisma } from "@prisma/client";
 
-@Injectable()
+@Injectable() 
 export class AuditService {
   private readonly logger = new Logger(AuditService.name);
 

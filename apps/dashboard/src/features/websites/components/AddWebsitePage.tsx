@@ -7,6 +7,17 @@ import { Button } from "@transora/ui/components/button";
 import { Input } from "@transora/ui/components/input";
 import { Label } from "@transora/ui/components/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@transora/ui/components/card";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxChips,
+  ComboboxChip,
+  ComboboxChipsInput,
+  ComboboxValue,
+} from "@transora/ui/components/combobox";
 import { ArrowLeft, Globe } from "lucide-react";
 import { useCreateWebsite } from "../api/website-mutations";
 
@@ -32,7 +43,7 @@ export function AddWebsitePage() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>
           <Link to="/websites">
@@ -78,17 +89,26 @@ export function AddWebsitePage() {
 
             <div className="space-y-2">
               <Label htmlFor="defaultLanguage">Default Language</Label>
-              <select
-                id="defaultLanguage"
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                {...form.register("defaultLanguage")}
+              <Combobox
+                name="defaultLanguage"
+                value={form.watch("defaultLanguage")}
+                onValueChange={(value) => form.setValue("defaultLanguage", value ?? undefined)}
               >
-                {SUPPORTED_LANGUAGES.map((lang) => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.name}
-                  </option>
-                ))}
-              </select>
+                <ComboboxInput placeholder="Select language">
+                  <ComboboxValue>
+                    {(value) => SUPPORTED_LANGUAGES.find((lang) => lang.code === value)?.name}
+                  </ComboboxValue>
+                </ComboboxInput>
+                <ComboboxContent>
+                  <ComboboxList>
+                    {SUPPORTED_LANGUAGES.map((lang) => (
+                      <ComboboxItem key={lang.code} value={lang.code}>
+                        {lang.name}
+                      </ComboboxItem>
+                    ))}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
             </div>
 
             <div className="space-y-2">
@@ -96,22 +116,33 @@ export function AddWebsitePage() {
               <p className="text-xs text-muted-foreground mb-2">
                 Select the languages you want to translate your website into.
               </p>
-              <div className="grid grid-cols-3 gap-2 max-h-60 overflow-y-auto rounded-md border p-3">
-                {SUPPORTED_LANGUAGES.map((lang) => (
-                  <label
-                    key={lang.code}
-                    className="flex items-center gap-2 text-sm cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      value={lang.code}
-                      className="rounded border-input"
-                      {...form.register("allowedLanguages")}
-                    />
-                    {lang.name}
-                  </label>
-                ))}
-              </div>
+              <Combobox
+                name="allowedLanguages"
+                multiple
+                defaultValue={form.watch("allowedLanguages")}
+                onValueChange={(value) => form.setValue("allowedLanguages", value)}
+              >
+                <ComboboxChips>
+                  {form.watch("allowedLanguages")?.map((langCode) => {
+                    const lang = SUPPORTED_LANGUAGES.find((l) => l.code === langCode);
+                    return lang ? (
+                      <ComboboxChip key={lang.code}>
+                        {lang.name}
+                      </ComboboxChip>
+                    ) : null;
+                  })}
+                  <ComboboxChipsInput placeholder="Select languages..." />
+                </ComboboxChips>
+                <ComboboxContent>
+                  <ComboboxList>
+                    {SUPPORTED_LANGUAGES.map((lang) => (
+                      <ComboboxItem key={lang.code} value={lang.code}>
+                        {lang.name}
+                      </ComboboxItem>
+                    ))}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
               {form.formState.errors.allowedLanguages && (
                 <p className="text-sm text-destructive">
                   {form.formState.errors.allowedLanguages.message}

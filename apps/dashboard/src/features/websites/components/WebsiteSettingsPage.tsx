@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UpdateWebsiteSchema, type UpdateWebsiteInput, SUPPORTED_LANGUAGES } from "@transora/shared";
 import { ArrowLeft, Settings } from "lucide-react";
@@ -9,6 +9,8 @@ import { Input } from "@transora/ui/components/input";
 import { Label } from "@transora/ui/components/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@transora/ui/components/card";
 import { Skeleton } from "@transora/ui/components/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@transora/ui/components/select";
+import { Switch } from "@transora/ui/components/switch";
 import { websiteQueries } from "../api/website-queries";
 import { useUpdateWebsite, useDeleteWebsite } from "../api/website-mutations";
 
@@ -92,41 +94,62 @@ function SettingsForm({ website }: { website: { id: string; domain: string; defa
 
           <div className="space-y-2">
             <Label htmlFor="defaultLanguage">Default Language</Label>
-            <select
-              id="defaultLanguage"
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
-              {...form.register("defaultLanguage")}
-            >
-              {SUPPORTED_LANGUAGES.map((lang) => (
-                <option key={lang.code} value={lang.code}>{lang.name}</option>
-              ))}
-            </select>
+            <Controller
+              control={form.control}
+              name="defaultLanguage"
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="w-full" id="defaultLanguage">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SUPPORTED_LANGUAGES.map((lang) => (
+                      <SelectItem key={lang.code} value={lang.code}>{lang.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="switcherPosition">Switcher Position</Label>
-              <select
-                id="switcherPosition"
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
-                {...form.register("switcherPosition")}
-              >
-                <option value="bottom-right">Bottom Right</option>
-                <option value="bottom-left">Bottom Left</option>
-                <option value="top-right">Top Right</option>
-                <option value="top-left">Top Left</option>
-              </select>
+              <Controller
+                control={form.control}
+                name="switcherPosition"
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger className="w-full" id="switcherPosition">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="bottom-right">Bottom Right</SelectItem>
+                      <SelectItem value="bottom-left">Bottom Left</SelectItem>
+                      <SelectItem value="top-right">Top Right</SelectItem>
+                      <SelectItem value="top-left">Top Left</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="switcherStyle">Switcher Style</Label>
-              <select
-                id="switcherStyle"
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
-                {...form.register("switcherStyle")}
-              >
-                <option value="dropdown">Dropdown</option>
-                <option value="flags">Flags</option>
-              </select>
+              <Controller
+                control={form.control}
+                name="switcherStyle"
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger className="w-full" id="switcherStyle">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="dropdown">Dropdown</SelectItem>
+                      <SelectItem value="flags">Flags</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
           </div>
 
@@ -136,21 +159,39 @@ function SettingsForm({ website }: { website: { id: string; domain: string; defa
                 <Label>SEO Hreflang Tags</Label>
                 <p className="text-xs text-muted-foreground">Add hreflang meta tags for translated pages</p>
               </div>
-              <input type="checkbox" className="rounded" {...form.register("seoHreflang")} />
+              <Controller
+                control={form.control}
+                name="seoHreflang"
+                render={({ field }) => (
+                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                )}
+              />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <Label>SEO Meta Translation</Label>
                 <p className="text-xs text-muted-foreground">Translate meta descriptions and titles</p>
               </div>
-              <input type="checkbox" className="rounded" {...form.register("seoMetaTranslate")} />
+              <Controller
+                control={form.control}
+                name="seoMetaTranslate"
+                render={({ field }) => (
+                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                )}
+              />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <Label>Active</Label>
                 <p className="text-xs text-muted-foreground">Enable or disable translations for this website</p>
               </div>
-              <input type="checkbox" className="rounded" {...form.register("isActive")} />
+              <Controller
+                control={form.control}
+                name="isActive"
+                render={({ field }) => (
+                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                )}
+              />
             </div>
           </div>
 

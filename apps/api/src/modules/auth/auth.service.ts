@@ -2,13 +2,13 @@ import { Injectable, ConflictException, UnauthorizedException, Logger } from "@n
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "@/prisma/prisma.service";
+import { Prisma } from "@prisma/client";
 import { PasswordService } from "@/common/services/password.service";
 import { EmailService } from "@/modules/email/email.service";
 import { JWT_ACCESS_TTL, JWT_REFRESH_TTL } from "@transora/shared";
 import type { RegisterInput, LoginInput, UpdateUserInput, ChangePasswordInput } from "@transora/shared";
 import type { EnvConfig } from "@/config/env.validation";
 import type { Response } from "express";
-import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
