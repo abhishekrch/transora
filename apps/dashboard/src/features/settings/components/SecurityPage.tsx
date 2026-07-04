@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@transora/ui/components/button";
@@ -6,7 +5,7 @@ import { SecurityForm } from "./SecurityForm";
 
 export function SecurityPage() {
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>
           <Link to="/settings">

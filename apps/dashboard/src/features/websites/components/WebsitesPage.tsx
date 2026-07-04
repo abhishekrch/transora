@@ -4,6 +4,7 @@ import { Globe, Plus, ArrowRight, Copy, MoreHorizontal, Settings, Trash2, BookOp
 import { Button } from "@transora/ui/components/button";
 import { Badge } from "@transora/ui/components/badge";
 import { Skeleton } from "@transora/ui/components/skeleton";
+import { Card, CardContent } from "@transora/ui/components/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -69,11 +70,15 @@ function WebsitesList() {
   }
 
   return (
-    <div className="space-y-3">
-      {websites.map((website) => (
-        <WebsiteRow key={website.id} website={website} />
-      ))}
-    </div>
+    <Card>
+      <CardContent className="pt-6">
+        <div className="space-y-2">
+          {websites.map((website) => (
+            <WebsiteRow key={website.id} website={website} />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 

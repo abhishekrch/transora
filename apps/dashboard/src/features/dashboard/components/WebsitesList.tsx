@@ -13,7 +13,7 @@ export function RecentWebsites() {
         <CardTitle className="text-base">Your Websites</CardTitle>
         <Button size="sm" asChild>
           <Link to="/websites/add">
-            <Plus className="mr-1.5 h-3.5 w-3.5" />
+            <Plus className="h-3.5 w-3.5" />
             Add website
           </Link>
         </Button>
@@ -55,7 +55,7 @@ function WebsitesList() {
           key={website.id}
           to="/websites/$id"
           params={{ id: website.id }}
-          className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-muted/50"
+          className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-muted/30"
         >
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted">
