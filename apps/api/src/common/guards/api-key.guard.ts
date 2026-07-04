@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-  UnauthorizedException,
-  ForbiddenException,
-} from "@nestjs/common";
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, ForbiddenException } from "@nestjs/common";
 import { PrismaService } from "@/prisma/prisma.service";
 
 @Injectable()
@@ -13,7 +7,7 @@ export class ApiKeyGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const apiKey = request.headers["x-api-key"];
+    const apiKey = this.extractApiKey(request);
 
     if (!apiKey) {
       throw new UnauthorizedException("API key required");
@@ -30,6 +24,10 @@ export class ApiKeyGuard implements CanActivate {
         allowedLanguages: true,
         rateLimitPerMin: true,
         dailyCharLimit: true,
+        switcherPosition: true,
+        switcherStyle: true,
+        seoHreflang: true,
+        seoMetaTranslate: true,
         isActive: true,
       },
     });
@@ -45,5 +43,15 @@ export class ApiKeyGuard implements CanActivate {
     request.website = website;
 
     return true;
+  }
+
+  private extractApiKey(request: any): string | undefined {
+    const headerKey = request.headers?.["x-api-key"] as string | undefined;
+    if (headerKey) return headerKey;
+
+    const queryKey = request.query?.["key"] as string | undefined;
+    if (queryKey) return queryKey;
+
+    return undefined;
   }
 }

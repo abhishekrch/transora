@@ -8,6 +8,7 @@ import { HealthModule } from "@/health/health.module";
 import { AuthModule } from "@/modules/auth/auth.module";
 import { WebsiteModule } from "@/modules/website/website.module";
 import { TranslateModule } from "@/modules/translate/translate.module";
+import { WidgetModule } from "@/modules/widget/widget.module";
 import { GlossaryModule } from "@/modules/glossary/glossary.module";
 import { AuditModule } from "@/modules/audit/audit.module";
 import { EmailModule } from "@/modules/email/email.module";
@@ -24,6 +25,7 @@ import { StatsModule } from "@/modules/stats/stats.module";
     AuthModule,
     WebsiteModule,
     TranslateModule,
+    WidgetModule,
     GlossaryModule,
     AuditModule,
     EmailModule,

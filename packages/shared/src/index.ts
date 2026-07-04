@@ -3,6 +3,7 @@ export * from "./schemas/auth";
 export * from "./schemas/user";
 export * from "./schemas/website";
 export * from "./schemas/translation";
+export * from "./schemas/widget";
 export * from "./schemas/pagination";
 export * from "./schemas/audit";
 export * from "./schemas/email";

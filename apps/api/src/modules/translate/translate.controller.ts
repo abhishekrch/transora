@@ -2,10 +2,10 @@ import { Controller, Post, UseGuards, Req, HttpCode, HttpStatus } from "@nestjs/
 import { TranslateBatchSchema, type TranslateBatchInput } from "@transora/shared";
 import { TranslateService } from "./translate.service";
 import { ZodBody } from "@/common/decorators/zod-body.decorator";
-import { ApiKeyGuard } from "./guards/api-key.guard";
-import { DomainWhitelistGuard } from "./guards/domain-whitelist.guard";
-import { RateLimitGuard } from "./guards/rate-limit.guard";
-import type { TranslateRequest } from "./interfaces/translate-request.interface";
+import { ApiKeyGuard } from "@/common/guards/api-key.guard";
+import { DomainWhitelistGuard } from "@/modules/translate/guards/domain-whitelist.guard";
+import { RateLimitGuard } from "@/modules/translate/guards/rate-limit.guard";
+import type { AuthenticatedRequest } from "@/common/interfaces/website-context.interface";
 
 @Controller("translate")
 export class TranslateController {
@@ -16,7 +16,7 @@ export class TranslateController {
   @UseGuards(ApiKeyGuard, DomainWhitelistGuard, RateLimitGuard)
   translateBatch(
     @ZodBody(TranslateBatchSchema) body: TranslateBatchInput,
-    @Req() req: TranslateRequest,
+    @Req() req: AuthenticatedRequest,
   ) {
     const { website } = req;
     return this.translateService.translateBatch(
