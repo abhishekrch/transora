@@ -14,7 +14,7 @@ export default defineConfig({
         extend: true,
       },
     },
-    minify: "terser",
+    minify: "esbuild",
     target: "es2018",
   },
 });

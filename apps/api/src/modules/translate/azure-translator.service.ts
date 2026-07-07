@@ -46,6 +46,7 @@ export class AzureTranslatorService implements OnModuleInit {
     const url = new URL(`${this.endpoint}/translate`);
     url.searchParams.set("api-version", "3.0");
     url.searchParams.set("to", targetLang);
+    url.searchParams.set("textType", "html");
     if (sourceLang) {
       url.searchParams.set("from", sourceLang);
     }

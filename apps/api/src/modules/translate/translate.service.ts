@@ -71,7 +71,8 @@ export class TranslateService {
 
       const stillMissing: typeof toTranslate = [];
 
-      cacheResults.forEach((cached, i) => {
+      for (let i = 0; i < cacheResults.length; i++) {
+        const cached = cacheResults[i];
         const item = toTranslate[i]!;
         if (cached) {
           results[item.index] = cached;
@@ -79,7 +80,7 @@ export class TranslateService {
         } else {
           stillMissing.push(item);
         }
-      });
+      }
 
       if (stillMissing.length > 0) {
         const azureResults = await this.azure.translateBatch(

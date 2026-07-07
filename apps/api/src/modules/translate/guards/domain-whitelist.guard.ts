@@ -4,9 +4,12 @@ import {
   ExecutionContext,
   ForbiddenException,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class DomainWhitelistGuard implements CanActivate {
+  constructor(private configService: ConfigService) {}
+
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
     const website = request.website;
@@ -25,10 +28,13 @@ export class DomainWhitelistGuard implements CanActivate {
       const originDomain = new URL(origin).hostname;
       const registeredDomain = website.domain;
 
+      const isDev = this.configService.get<string>("NODE_ENV") !== "production";
+
       const isAllowed =
         originDomain === registeredDomain ||
         originDomain === `www.${registeredDomain}` ||
-        `www.${originDomain}` === registeredDomain;
+        `www.${originDomain}` === registeredDomain ||
+        (isDev && (originDomain === "localhost" || originDomain === "127.0.0.1"));
 
       if (!isAllowed) {
         throw new ForbiddenException(

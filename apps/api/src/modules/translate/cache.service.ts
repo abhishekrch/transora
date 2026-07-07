@@ -70,13 +70,14 @@ export class CacheService {
     const results: (string | null)[] = new Array(texts.length);
     const missIndices: number[] = [];
 
-    cached.forEach((val: string | null, i: number) => {
+    for (let i = 0; i < cached.length; i++) {
+      const val = cached[i];
       if (val) {
         results[i] = val;
       } else {
         missIndices.push(i);
       }
-    });
+    }
 
     if (missIndices.length > 0) {
       const missHashes = missIndices.map((i) => hashes[i]!);
