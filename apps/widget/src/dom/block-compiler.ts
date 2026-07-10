@@ -1,5 +1,6 @@
 import { type TranslationBlock, BLOCK_TAGS } from "../types";
 import { isExcluded } from "./tree-walker";
+import { sanitizeHtml } from "../utils/sanitize";
 
 const ORIGINAL_TEXT = Symbol("transora.original");
 
@@ -89,6 +90,8 @@ export function applyTranslation(
     return;
   }
 
+  const sanitized = sanitizeHtml(translatedHtml);
+
   try {
     translatedContainers.add(element);
     if (!originalBlockMap.has(element)) {
@@ -96,7 +99,7 @@ export function applyTranslation(
     }
 
     const parser = new DOMParser();
-    const doc = parser.parseFromString(`<body>${translatedHtml}</body>`, "text/html");
+    const doc = parser.parseFromString(`<body>${sanitized}</body>`, "text/html");
     const parsedBody = doc.body;
 
     if (!parsedBody) return;
