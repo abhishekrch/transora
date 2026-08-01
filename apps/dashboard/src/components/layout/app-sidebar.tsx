@@ -56,7 +56,7 @@ export function AppSidebar() {
                   <Languages size={16} strokeWidth={2.5} />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">transora</span>
+                  <span className="truncate font-display font-semibold tracking-tight">transora</span>
                   <span className="truncate text-xs text-muted-foreground">
                     Dashboard
                   </span>

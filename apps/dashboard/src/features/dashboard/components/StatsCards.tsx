@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@transora/ui/component
 import { Skeleton } from "@transora/ui/components/skeleton";
 import { useGlobalStats } from "@/features/dashboard/hooks/use-global-stats";
 
+const CARD_SCRIPTS = ["हिं", "ॐ", "বাং", "भो"] as const;
+
 export function StatsCards() {
   const {
     totalTranslations,
@@ -21,6 +23,7 @@ export function StatsCards() {
         value={isLoading ? "—" : totalTranslations.toLocaleString()}
         description="Across all websites"
         loading={isLoading}
+        script={CARD_SCRIPTS[0]!}
       />
       <StatCard
         icon={Zap}
@@ -28,6 +31,7 @@ export function StatsCards() {
         value={isLoading ? "—" : `${cacheHitRate}%`}
         description="Requests served from cache"
         loading={isLoading}
+        script={CARD_SCRIPTS[1]!}
       />
       <StatCard
         icon={BarChart3}
@@ -35,6 +39,7 @@ export function StatsCards() {
         value={isLoading ? "—" : charsTranslated.toLocaleString()}
         description="This month"
         loading={isLoading}
+        script={CARD_SCRIPTS[2]!}
       />
       <StatCard
         icon={Globe}
@@ -42,6 +47,7 @@ export function StatsCards() {
         value={isLoading ? "—" : activeWebsitesCount.toString()}
         description="Currently translating"
         loading={isLoading}
+        script={CARD_SCRIPTS[3]!}
       />
     </div>
   );
@@ -53,15 +59,23 @@ function StatCard({
   value,
   description,
   loading,
+  script,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string;
   description: string;
   loading?: boolean;
+  script: string;
 }) {
   return (
-    <Card>
+    <Card className="group relative overflow-hidden">
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -right-1 top-2 select-none font-display text-6xl font-bold text-muted/50 transition-colors group-hover:text-primary/10"
+      >
+        {script}
+      </span>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{label}</CardTitle>
         <Icon className="h-4 w-4 text-muted-foreground" />
@@ -70,7 +84,7 @@ function StatCard({
         {loading ? (
           <Skeleton className="h-8 w-20 mb-1" />
         ) : (
-          <div className="text-2xl font-bold">{value}</div>
+          <div className="font-display text-2xl font-semibold tracking-tight">{value}</div>
         )}
         <p className="text-xs text-muted-foreground">{description}</p>
       </CardContent>
