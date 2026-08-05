@@ -1,7 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UpdateWebsiteSchema, type UpdateWebsiteInput, SUPPORTED_LANGUAGES, type Website } from "@transora/shared";
-import { Settings } from "lucide-react";
+import { SaveIcon, SettingsIcon } from "lucide-react";
 import { Button } from "@transora/ui/components/button";
 import { Input } from "@transora/ui/components/input";
 import { Label } from "@transora/ui/components/label";
@@ -46,7 +46,7 @@ export function SettingsForm({ website }: SettingsFormProps) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Settings className="h-5 w-5" />
+          <SettingsIcon className="h-5 w-5" />
           Configuration
         </CardTitle>
         <CardDescription>
@@ -187,8 +187,15 @@ export function SettingsForm({ website }: SettingsFormProps) {
           </div>
 
           <Button type="submit" disabled={updateWebsite.isPending}>
-            {updateWebsite.isPending ? "Saving..." : "Save Changes"}
-          </Button>
+            {updateWebsite.isPending ? (
+              "Saving..."
+            ) : (
+              <>
+                <SaveIcon className="mr-1.5 h-4 w-4" />
+                Save Changes
+              </>
+            )}
+            </Button>
         </form>
       </CardContent>
     </Card>
